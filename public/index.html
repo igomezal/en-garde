@@ -6,6 +6,29 @@
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <link rel="icon" href="<%= BASE_URL %>favicon.ico">
     <title><%= htmlWebpackPlugin.options.title %></title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@latest/css/materialdesignicons.min.css">
+
+    <script src="https://www.gstatic.com/firebasejs/7.17.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.17.1/firebase-analytics.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.17.1/firebase-auth.js"></script>
+    
+    <script>
+        // Your web app's Firebase configuration
+        var firebaseConfig = {
+            apiKey: "AIzaSyDowr-wtoBZ2-4AteEgCvCj7ItZZthSqug",
+            authDomain: "en-garde-1b8c5.firebaseapp.com",
+            databaseURL: "https://en-garde-1b8c5.firebaseio.com",
+            projectId: "en-garde-1b8c5",
+            storageBucket: "en-garde-1b8c5.appspot.com",
+            messagingSenderId: "262157195711",
+            appId: "1:262157195711:web:c15a5f57b01519d78f690a",
+            measurementId: "G-N7S6EZKF1H"
+        };
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        firebase.analytics();
+    </script>
   </head>
   <body>
     <noscript>
