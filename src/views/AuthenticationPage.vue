@@ -17,23 +17,18 @@
     name: 'AuthenticationPage',
     data: () => ({
         mdiGoogle,
-        user: undefined,
     }),
-    beforeCreate: function() {
-      window.firebase.auth().onAuthStateChanged((user) => {
-        if(user) {
-          this.user = user;
-        } else {
-          this.user = null;
-        }
-      });
+    computed: {
+      user() {
+        return this.$store.state.user;
+      },
     },
     methods: {
       onGoogleAuthentication: function() {
           const provider = new window.firebase.auth.GoogleAuthProvider();
           window.firebase.auth().signInWithRedirect(provider);
           
-      }
+      },
     }
   }
 </script>

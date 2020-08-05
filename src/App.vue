@@ -47,12 +47,12 @@ export default {
   beforeCreate: function() {
     window.firebase.auth().onAuthStateChanged((user) => {
       if(user) {
-        this.user = user; // store it with vue store
+        this.$store.commit('updateUser', user);
         if(this.$router.currentRoute.name === 'Login') {
           this.$router.push({ name: 'Dashboard' });
         }
       } else {
-        this.user = null; // store it with vue store
+        this.$store.commit('updateUser', null);
         if(this.$router.currentRoute.name !== 'Login') {
           this.$router.push({ name: 'Login' });
         }
