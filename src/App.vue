@@ -48,6 +48,7 @@ export default {
     window.firebase.auth().onAuthStateChanged((user) => {
       if(user) {
         this.$store.commit('updateUser', user);
+        this.$store.dispatch('getAvailability');
         if(this.$router.currentRoute.name === 'Login') {
           this.$router.push({ name: 'Dashboard' });
         }
