@@ -4457,6 +4457,11 @@ interpret@^1.0.0:
   resolved "https://registry.npm.taobao.org/interpret/download/interpret-1.4.0.tgz#665ab8bc4da27a774a40584e812e3e0fa45b1a1e"
   integrity sha1-Zlq4vE2iendKQFhOgS4+D6RbGh4=
 
+intl-tel-input@^17.0.3:
+  version "17.0.3"
+  resolved "https://registry.yarnpkg.com/intl-tel-input/-/intl-tel-input-17.0.3.tgz#0f1468ac0ea573b4cedddd24db9fd5cb32eb7d86"
+  integrity sha512-vfO5yIddrkNKaJYqGySuT6lyovWZoBLU/vyGA2A4VdKIZasknpd9/emTJYIPqFzjkguFfEDUiERKFih3k9Yj3Q==
+
 invariant@^2.2.2, invariant@^2.2.4:
   version "2.2.4"
   resolved "https://registry.npm.taobao.org/invariant/download/invariant-2.2.4.tgz#610f3c92c9359ce1db616e538008d23ff35158e6"

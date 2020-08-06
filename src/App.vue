@@ -26,13 +26,46 @@
       </div>
 
       <v-spacer></v-spacer>
+
+      <v-btn v-if="user" icon @click="goToProfilePage">
+        <v-icon>mdi-account</v-icon>
+      </v-btn>
     </v-app-bar>
+
+    <v-snackbar
+        color="success"
+        v-model="snackbar.status"
+        absolute
+      >
+        {{ snackbar.text }}
+
+        <template v-slot:action="{ attrs }">
+          <v-btn
+            color="white"
+            text
+            v-bind="attrs"
+            @click="closeSnackbar"
+          >
+            Close
+          </v-btn>
+        </template>
+      </v-snackbar>
 
     <v-main>
       <router-view></router-view>
     </v-main>
   </v-app>
 </template>
+
+<style src="intl-tel-input/build/css/intlTelInput.min.css">
+
+</style>
+
+<style>
+  .v-snack__wrapper {
+    min-width: auto !important;
+  }
+</style>
 
 <script>
 export default {
@@ -44,11 +77,20 @@ export default {
   data: () => ({
     //
   }),
+  computed: {
+    user: function() {
+      return this.$store.state.user;
+    },
+    snackbar: function() {
+      return this.$store.state.snackbar;
+    },
+  },
   beforeCreate: function() {
     window.firebase.auth().onAuthStateChanged((user) => {
       if(user) {
         this.$store.commit('updateUser', user);
-        this.$store.dispatch('getAvailability');
+        this.$store.dispatch('getUserInfo');
+        this.$store.dispatch('getDutyDays');
         if(this.$router.currentRoute.name === 'Login') {
           this.$router.push({ name: 'Dashboard' });
         }
@@ -60,5 +102,15 @@ export default {
       }
     });
   },
+  methods: {
+    goToProfilePage() {
+      if(this.$router.currentRoute.name !== 'Profile') {
+        this.$router.push({ name: 'Profile' });
+      }
+    },
+    closeSnackbar() {
+      this.$store.commit('closeSnackbar');
+    }
+  }
 };
 </script>

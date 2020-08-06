@@ -2,7 +2,7 @@
   <v-container>
     <v-row class="text-center">
       <v-col cols="12">
-        <v-switch v-model="availability" label="Availability"></v-switch>
+        <v-switch v-model="availability" label="Availability" :disabled="isAvailabilityCheckDisabled(this.telephone, this.dutyDays)"></v-switch>
       </v-col>
     </v-row>
   </v-container>
@@ -15,29 +15,28 @@
     data: () => ({
     }),
     computed: {
-      user() {
-        return this.$store.state.user;
-      },
       availability: {
         get() {
-          return this.$store.state.availability;
+          return this.$store.state.user ? this.$store.state.user.availability : false;
         },
         set(valueChecked) {
-          const uid = this.user.uid;
-          const db = window.firebase.firestore();
-
-          db.doc(`users/${uid}`).set({
-            availability: valueChecked,
-          })
-            .then(() => {
-                this.$store.commit('updateAvailability', valueChecked);
-            })
-            .catch((error) => console.error('Error updating db', error));
+          this.$store.dispatch('updateAvailability', valueChecked);
         },
       },
+      telephone: function() {
+        return this.$store.state.user ? this.$store.state.user.telephone : undefined;
+      },
+      dutyDays: function() {
+        return this.$store.state.dutyDays;
+      }
     },
     methods: {
-
+      isAvailabilityCheckDisabled(telephone, dutyDays) {
+        if(telephone && Object.keys(dutyDays).length != 0) {
+          return !telephone && dutyDays[new Date().toISOString().split('T')[0]].includes(this.user.uid);
+        }
+        return true;
+      }
     }
   }
 </script>
