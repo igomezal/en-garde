@@ -5,6 +5,13 @@ Vue.use(Vuex)
 
 const db = window.firebase.firestore();
 
+const basicUserData = {
+  availability: false,
+  telephone: '',
+}
+
+const createNewUser = uid => db.doc(`users/${uid}`).set(basicUserData);
+
 export default new Vuex.Store({
   state: {
     user: undefined,
@@ -37,7 +44,14 @@ export default new Vuex.Store({
 
       db.doc(`users/${uid}`).get()
         .then((doc) => {
-          commit('updateUser',  { ...state.user, ...doc.data() });
+          const userData = doc.data();
+          if(!userData) {
+            createNewUser(uid)
+              .then(() => commit('updateUser', { ...state.user, ...basicUserData }))
+              .catch(error => console.error('Error creating user', error));
+          } else {
+            commit('updateUser',  { ...state.user, ...doc.data() });
+          }
         })
         .catch((error) => console.error('Error getting user data', error));
     },
