@@ -17,24 +17,23 @@
             outlined
             dense
           ></v-text-field>
-
-          <v-btn
-            color="primary"
-            outlined
+          <div class="d-flex justify-end">
+            <v-btn
             class="mr-4"
-            @click="submit"
-          >
-            Submit
-          </v-btn>
-
-          <v-btn
-            color="deep-purple accent-4"
             outlined
-            class="mr-4"
             @click="cancel"
           >
             Cancel
           </v-btn>
+
+          <v-btn
+            :class="{ 'black--text': dark }"
+            color="primary"
+            @click="submit"
+          >
+            Submit
+          </v-btn>
+          </div>
         </v-form>
       </v-col>
     </v-row>
@@ -103,6 +102,9 @@ export default {
       set() {
       }
     },
+    dark() {
+      return this.$vuetify.theme.dark;
+    }
   },
   methods: {
     submit() {

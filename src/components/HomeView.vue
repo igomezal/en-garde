@@ -1,18 +1,63 @@
 <template>
   <v-container>
-    <v-row class="text-center">
+    <v-row>
       <v-col cols="12">
-        <v-switch v-model="availability" label="Availability" :disabled="isAvailabilityCheckDisabled(this.telephone, this.dutyDays)"></v-switch>
+        <v-card
+          class="mx-auto"
+        >
+          <v-card-title>
+            Set availability
+          </v-card-title>
+          <v-card-text class="normal-max-width">
+            <v-switch inset hide-details v-model="availability" label="Availability" :disabled="isAvailabilityCheckDisabled(this.telephone, this.dutyDays)"></v-switch>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn
+              icon
+              @click="showMoreInfoAvailability = !showMoreInfoAvailability"
+            >
+              <v-icon>{{ showMoreInfoAvailability ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
+            </v-btn>
+          </v-card-actions>
+          <v-expand-transition>
+            <div v-show="showMoreInfoAvailability">
+              <v-divider></v-divider>
+                <v-card-text class="text-justify">
+                  You can change your availability when you are on duty, this way when there is an incoming call whoever is available at that moment will have more priority (to receive the call) than someone who is not available.
+                </v-card-text>
+            </div>
+          </v-expand-transition>
+        </v-card>
+      </v-col>
+
+      <v-col cols="12">
+        <v-card
+          class="mx-auto"
+        >
+          <v-card-title>
+            On duty calendar
+          </v-card-title>
+          <v-calendar>
+          </v-calendar>
+        </v-card>
       </v-col>
     </v-row>
   </v-container>
 </template>
+
+<style scoped>
+  .normal-max-width {
+    max-width: 300px;
+  }
+</style>
 
 <script>
   export default {
     name: 'HomeView',
 
     data: () => ({
+      showMoreInfoAvailability: false,
     }),
     computed: {
       availability: {

@@ -2,46 +2,49 @@
   <v-app>
     <v-app-bar
       app
-      color="primary"
-      dark
+      color="background-app-bar"
+      elevate-on-scroll
     >
-      <div class="d-flex align-center">
-        <v-img
-          alt="Vuetify Logo"
-          class="shrink mr-2"
-          contain
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png"
-          transition="scale-transition"
-          width="40"
-        />
-
-        <v-img
-          alt="Vuetify Name"
-          class="shrink mt-1 hidden-sm-and-down"
-          contain
-          min-width="100"
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-name-dark.png"
-          width="100"
-        />
-      </div>
+      <v-toolbar-title>{{pageTitle}}</v-toolbar-title>
 
       <v-spacer></v-spacer>
 
       <v-btn v-if="user" icon @click="goToProfilePage">
         <v-icon>mdi-account</v-icon>
       </v-btn>
+      <v-menu
+        left
+        bottom
+      >
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn
+            icon
+            v-bind="attrs"
+            v-on="on"
+          >
+            <v-icon>mdi-dots-vertical</v-icon>
+          </v-btn>
+        </template>
+
+        <v-list>
+          <v-list-item
+            @click="changeTheme"
+          >
+            <v-list-item-title>Change to {{this.$vuetify.theme.dark ? 'light'  : 'dark'}} theme</v-list-item-title>
+          </v-list-item>
+        </v-list>
+      </v-menu>
     </v-app-bar>
 
     <v-snackbar
-        color="success"
+        color="snackbar-background-color"
         v-model="snackbar.status"
-        absolute
+        elevation="24"
       >
         {{ snackbar.text }}
-
         <template v-slot:action="{ attrs }">
           <v-btn
-            color="white"
+            color="snackbar-action-color"
             text
             v-bind="attrs"
             @click="closeSnackbar"
@@ -51,33 +54,44 @@
         </template>
       </v-snackbar>
 
-    <v-main>
-      <router-view></router-view>
+    <v-main class="main">
+      <transition name="router-anim" enter-active-class="animate__animated animate__fadeIn">
+        <router-view></router-view>
+      </transition>
     </v-main>
   </v-app>
 </template>
 
 <style src="intl-tel-input/build/css/intlTelInput.min.css">
+</style>
 
+<style src="animate.css/animate.min.css">
 </style>
 
 <style>
+  .v-snack__content {
+    color: var(--v-snackbar-text-color-base);
+  }
+
   .v-snack__wrapper {
     min-width: auto !important;
+  }
+
+  .main {
+    background-color: var(--v-background-base);
   }
 </style>
 
 <script>
 export default {
   name: 'App',
-
-  components: {
-  },
-
   data: () => ({
-    //
+    applicationName: 'En Garde',
   }),
   computed: {
+    pageTitle: function() {
+      return this.$route.name === 'Login' ? this.applicationName : `${this.applicationName} - ${this.$route.name}`;
+    },
     user: function() {
       return this.$store.state.user;
     },
@@ -85,7 +99,17 @@ export default {
       return this.$store.state.snackbar;
     },
   },
+  watch: {
+    $route: {
+      handler: function(to) {
+        document.title = `${this.applicationName} - ${to.name}`;
+      },
+      immediate: true,
+    },
+  },
   beforeCreate: function() {
+    const storedDarkTheme = JSON.parse(localStorage.getItem('darkTheme'));
+    this.$vuetify.theme.dark = storedDarkTheme === null ? false : storedDarkTheme;
     window.firebase.auth().onAuthStateChanged((user) => {
       if(user) {
         this.$store.commit('updateUser', user);
@@ -103,6 +127,10 @@ export default {
     });
   },
   methods: {
+    changeTheme() {
+      this.$vuetify.theme.dark = !this.$vuetify.theme.dark;
+      localStorage.setItem('darkTheme', this.$vuetify.theme.dark);
+    },
     goToProfilePage() {
       if(this.$router.currentRoute.name !== 'Profile') {
         this.$router.push({ name: 'Profile' });
