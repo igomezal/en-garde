@@ -109,7 +109,19 @@ export default {
   },
   beforeCreate: function() {
     const storedDarkTheme = JSON.parse(localStorage.getItem('darkTheme'));
-    this.$vuetify.theme.dark = storedDarkTheme === null ? false : storedDarkTheme;
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches && storedDarkTheme === null) { // Dark mode base on device settings
+      this.$vuetify.theme.dark = true;
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
+        if(event.matches) {
+          this.$vuetify.theme.dark = true;
+        } else {
+          this.$vuetify.theme.dark = false;
+        }
+      });
+    } else { // Dark mode base on user selection
+      this.$vuetify.theme.dark = storedDarkTheme === null ? false : storedDarkTheme;
+    }
+
     window.firebase.auth().onAuthStateChanged((user) => {
       if(user) {
         this.$store.commit('updateUser', user);
