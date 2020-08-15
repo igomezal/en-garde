@@ -1,6 +1,13 @@
 <template>
   <v-container>
     <v-row>
+      <v-col cols="12" v-if="!telephone">
+        <v-alert 
+          type="warning"
+          prominent>
+          Please set your telephone number in the profile page.
+        </v-alert>
+      </v-col>
       <v-col cols="12">
         <v-card
           class="mx-auto"
@@ -9,7 +16,7 @@
             Set availability
           </v-card-title>
           <v-card-text class="normal-max-width">
-            {{this.isAvailabilityCheckDisabled(this.telephone, this.dutyDays) ? 'You are not on-duty' : 'Currently you are on-duty'}}
+            {{this.isAvailabilityCheckDisabled(this.telephone, this.dutyDays) ? 'You are not on-duty' : 'You are on-duty'}}
             <v-switch inset hide-details v-model="availability" label="Availability" :disabled="isAvailabilityCheckDisabled(this.telephone, this.dutyDays)"></v-switch>
           </v-card-text>
           <v-card-actions>
