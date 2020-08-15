@@ -1,4 +1,8 @@
+![Node.js CI](https://github.com/igomezal/en-garde/workflows/Node.js%20CI/badge.svg?branch=master)
+
 # en-garde
+
+Vue project to manage ourselves the on-duty calls.
 
 ## Project setup
 ```
