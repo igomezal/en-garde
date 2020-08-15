@@ -9,6 +9,7 @@
             Set availability
           </v-card-title>
           <v-card-text class="normal-max-width">
+            {{this.isAvailabilityCheckDisabled(this.telephone, this.dutyDays) ? 'You are not on-duty' : 'Currently you are on-duty'}}
             <v-switch inset hide-details v-model="availability" label="Availability" :disabled="isAvailabilityCheckDisabled(this.telephone, this.dutyDays)"></v-switch>
           </v-card-text>
           <v-card-actions>
@@ -73,12 +74,17 @@
       },
       dutyDays: function() {
         return this.$store.state.dutyDays;
-      }
+      },
+      user() {
+        return this.$store.state.user;
+      },
     },
     methods: {
       isAvailabilityCheckDisabled(telephone, dutyDays) {
         if(telephone && Object.keys(dutyDays).length != 0) {
-          return !telephone && dutyDays[new Date().toISOString().split('T')[0]].includes(this.user.uid);
+          debugger;
+          const currentDutyDay = dutyDays[new Date().toISOString().split('T')[0]];
+          return currentDutyDay ? !currentDutyDay.includes(this.user.uid) : true;
         }
         return true;
       }
