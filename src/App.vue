@@ -5,6 +5,10 @@
       color="background-app-bar"
       elevate-on-scroll
     >
+      <v-btn icon @click="goBack" v-if="showBackButton()">
+        <v-icon>mdi-arrow-left</v-icon>
+      </v-btn>
+
       <v-toolbar-title>{{pageTitle}}</v-toolbar-title>
 
       <v-spacer></v-spacer>
@@ -31,6 +35,11 @@
             @click="changeTheme"
           >
             <v-list-item-title>Change to {{this.$vuetify.theme.dark ? 'light'  : 'dark'}} theme</v-list-item-title>
+          </v-list-item>
+          <v-list-item
+            @click="goToAboutPage"
+          >
+            <v-list-item-title>About it</v-list-item-title>
           </v-list-item>
         </v-list>
       </v-menu>
@@ -90,7 +99,7 @@ export default {
   }),
   computed: {
     pageTitle: function() {
-      return this.$route.name === 'Login' ? this.applicationName : `${this.applicationName} - ${this.$route.name}`;
+      return this.$route.name === 'Login' ? this.applicationName : this.$route.name;
     },
     user: function() {
       return this.$store.state.user;
@@ -103,6 +112,11 @@ export default {
     $route: {
       handler: function(to) {
         document.title = `${this.applicationName} - ${to.name}`;
+        if(!['Login', 'About'].includes(to.name))
+          this.checkPermissions();
+        if(to.name === 'Login' && this.user) {
+          this.$router.push({ name: 'Dashboard' });
+        }
       },
       immediate: true,
     },
@@ -139,13 +153,29 @@ export default {
     });
   },
   methods: {
+    showBackButton() {
+      return !['Dashboard', 'Login', null].includes(this.$route.name);
+    },
+    goBack() {
+      this.$router.goBack();
+    },
     changeTheme() {
       this.$vuetify.theme.dark = !this.$vuetify.theme.dark;
       localStorage.setItem('darkTheme', this.$vuetify.theme.dark);
     },
+    goToAboutPage() {
+      if(this.$router.currentRoute.name !== 'About') {
+        this.$router.push({ name: 'About' });
+      }
+    },
     goToProfilePage() {
       if(this.$router.currentRoute.name !== 'Profile') {
         this.$router.push({ name: 'Profile' });
+      }
+    },
+    checkPermissions() {
+      if(this.user === null) {
+        this.$router.push({ name: 'Login' });
       }
     },
     closeSnackbar() {

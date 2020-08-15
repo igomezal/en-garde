@@ -1,6 +1,6 @@
 <template>
   <div class="about">
-    <AboutView name="Ivan"/>
+    <AboutView/>
   </div>
 </template>
 
