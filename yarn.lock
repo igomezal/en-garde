@@ -904,11 +904,6 @@
     cssnano-preset-default "^4.0.0"
     postcss "^7.0.0"
 
-"@mdi/js@^5.4.55":
-  version "5.4.55"
-  resolved "https://registry.yarnpkg.com/@mdi/js/-/js-5.4.55.tgz#7798c38da36a705ee6d635eb4507be63e914b05f"
-  integrity sha512-9kWM1mGB8KiiKgGjPV1CRoF4aQifzAegvIR2zODm6VpuXDHDOVn7yOFH4D/K6imKVp9HE02N9uxHuxUKB0gjRg==
-
 "@mrmlnc/readdir-enhanced@^2.2.1":
   version "2.2.1"
   resolved "https://registry.npm.taobao.org/@mrmlnc/readdir-enhanced/download/@mrmlnc/readdir-enhanced-2.2.1.tgz#524af240d1a360527b730475ecfa1344aa540dde"

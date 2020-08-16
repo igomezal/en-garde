@@ -3,7 +3,6 @@
     <v-app-bar
       app
       color="background-app-bar"
-      elevate-on-scroll
     >
       <v-btn icon @click="goBack" v-if="showBackButton()">
         <v-icon>mdi-arrow-left</v-icon>
@@ -15,6 +14,16 @@
 
       <v-btn v-if="user" icon @click="goToProfilePage">
         <v-icon>mdi-account</v-icon>
+      </v-btn>
+      <v-btn v-if="user" icon @click="goToNotificationsPage">
+          <v-badge
+            color="green"
+            :content="newNotifications"
+            :value="newNotifications"
+            overlap
+          >
+            <v-icon>mdi-bell</v-icon>
+          </v-badge>
       </v-btn>
       <v-menu
         left
@@ -107,6 +116,9 @@ export default {
     snackbar: function() {
       return this.$store.state.snackbar;
     },
+    newNotifications: function() {
+      return this.$store.state.notifications.filter((notification) => !notification.read).length;
+    },
   },
   watch: {
     $route: {
@@ -141,6 +153,19 @@ export default {
         this.$store.commit('updateUser', user);
         this.$store.dispatch('getUserInfo');
         this.$store.dispatch('getDutyDays');
+
+        const messaging = window.firebase.messaging();
+        messaging.onMessage((payload) => {
+          // Get notifications when app is opened
+          console.log('Message received. ', payload);
+          this.$store.commit('addNotification', payload.notification);
+          // ...
+        });
+
+        messaging.onTokenRefresh((payload) => {
+          console.log('Token updated', payload);
+        });
+
         if(this.$router.currentRoute.name === 'Login') {
           this.$router.push({ name: 'Dashboard' });
         }
@@ -171,6 +196,11 @@ export default {
     goToProfilePage() {
       if(this.$router.currentRoute.name !== 'Profile') {
         this.$router.push({ name: 'Profile' });
+      }
+    },
+    goToNotificationsPage() {
+      if(this.$router.currentRoute.name !== 'Notifications') {
+        this.$router.push({ name: 'Notifications' });
       }
     },
     checkPermissions() {

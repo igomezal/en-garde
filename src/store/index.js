@@ -8,7 +8,7 @@ const db = window.firebase.firestore();
 const basicUserData = {
   availability: false,
   telephone: '',
-}
+};
 
 const createNewUser = uid => db.doc(`users/${uid}`).set(basicUserData);
 
@@ -20,8 +20,28 @@ export default new Vuex.Store({
       text: '',
     },
     dutyDays: {},
+    loadingUserData: true,
+    notifications: [],
   },
   mutations: {
+    syncNotifications(state, notifications) {
+      state.notifications = notifications;
+    },
+    addNotification(state, notification) {
+      state.notifications.push({ ...notification, read: false });
+    },
+    deleteNotification(state, notificationId) {
+      state.notifications.splice(notificationId, 1);
+    },
+    markNotificationAsRead(state, notificationId) {
+      state.notifications[notificationId].read = true;
+    },
+    startLoadingUserData(state) {
+      state.loadingUserData = true;
+    },
+    finishLoadingUserData(state) {
+      state.loadingUserData = false;
+    },
     updateUser(state, user) {
       state.user = user;
     },
@@ -42,15 +62,20 @@ export default new Vuex.Store({
     getUserInfo({ commit, state }) {
       const uid = state.user.uid;
 
+      commit('startLoadingUserData');
       db.doc(`users/${uid}`).get()
         .then((doc) => {
           const userData = doc.data();
           if(!userData) {
             createNewUser(uid)
-              .then(() => commit('updateUser', { ...state.user, ...basicUserData }))
+              .then(() => {
+                commit('updateUser', { ...state.user, ...basicUserData });
+                commit('finishLoadingUserData');
+              })
               .catch(error => console.error('Error creating user', error));
           } else {
             commit('updateUser',  { ...state.user, ...doc.data() });
+            commit('finishLoadingUserData');
           }
         })
         .catch((error) => console.error('Error getting user data', error));
