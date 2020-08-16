@@ -110,6 +110,14 @@ export default new Vuex.Store({
         })
         .catch((error) => console.error('Error updating db', error));
     },
+    updateNotificationToken({ state }, notificationToken) {
+      const uid = state.user.uid;
+
+      db.doc(`users/${uid}`).update({
+        notificationToken,
+      })
+      .catch((error) => console.error('Error updating db', error));
+    },
   },
   modules: {
   }

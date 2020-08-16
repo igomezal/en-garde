@@ -101,7 +101,11 @@
 </style>
 
 <script>
-import { messaging } from './utils/push-notifications.js';
+import {
+  messaging,
+  getPermissionForNotification,
+  askForPermissionToReceiveNotifications,
+} from './utils/push-notifications.js';
 
 export default {
   name: 'App',
@@ -156,15 +160,19 @@ export default {
         this.$store.dispatch('getUserInfo');
         this.$store.dispatch('getDutyDays');
 
+        if(getPermissionForNotification()) {
+          askForPermissionToReceiveNotifications()
+            .then(token => this.$store.dispatch('updateNotificationToken', token));
+        }
+
         messaging.onMessage((payload) => {
           // Get notifications when app is opened
-          console.log('Message received. ', payload);
           this.$store.commit('addNotification', payload.notification);
-          // ...
         });
 
-        messaging.onTokenRefresh((payload) => {
-          console.log('Token updated', payload);
+        messaging.onTokenRefresh(() => {
+          askForPermissionToReceiveNotifications()
+            .then(token => this.$store.dispatch('updateNotificationToken', token));
         });
 
         if(this.$router.currentRoute.name === 'Login') {

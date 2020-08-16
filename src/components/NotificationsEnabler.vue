@@ -8,7 +8,12 @@
 </template>
 
 <script>
-import { askForPermissionToReceiveNotifications, deleteRegisteredToken } from '../utils/push-notifications.js';
+import { 
+  askForPermissionToReceiveNotifications, 
+  deleteRegisteredToken,
+  setPermissionForNotification,
+  getPermissionForNotification,
+} from '../utils/push-notifications.js';
 
 export default {
   name: "NotificationEnabler",
@@ -17,15 +22,15 @@ export default {
   computed: {
     notifications: {
       get() {
-        return JSON.parse(localStorage.getItem("notifications"));
+        return getPermissionForNotification();
       },
       set(notificationsValue) {
         if(notificationsValue) {
-          askForPermissionToReceiveNotifications();
+          askForPermissionToReceiveNotifications().then(token => this.$store.dispatch('updateNotificationToken', token));
         } else {
-          deleteRegisteredToken();
+          deleteRegisteredToken().then(() => this.$store.dispatch('updateNotificationToken', null));
         }
-        return localStorage.setItem("notifications", notificationsValue);
+        return setPermissionForNotification(notificationsValue);
       },
     },
   },
