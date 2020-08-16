@@ -16,6 +16,8 @@ firebase.initializeApp(firebaseConfig);
 
 const messaging = firebase.messaging();
 
+messaging.usePublicVapidKey('BM4mu4tlGOhepZM7w2mC-3lP0jtpK1WOU7b5btrfx3ymjRVrmpUMBmYL71vs0JIAFm8pCI_YMYsVJdYyoQI4Igk');
+
 messaging.onBackgroundMessage((payload) => {
   // Notifications which comes from a click
 });

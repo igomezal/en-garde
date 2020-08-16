@@ -101,6 +101,8 @@
 </style>
 
 <script>
+import { messaging } from './utils/push-notifications.js';
+
 export default {
   name: 'App',
   data: () => ({
@@ -154,7 +156,6 @@ export default {
         this.$store.dispatch('getUserInfo');
         this.$store.dispatch('getDutyDays');
 
-        const messaging = window.firebase.messaging();
         messaging.onMessage((payload) => {
           // Get notifications when app is opened
           console.log('Message received. ', payload);
