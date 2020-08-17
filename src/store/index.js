@@ -97,7 +97,7 @@ export default new Vuex.Store({
           commit('updateUser', { ...state.user, availability: valueChecked });
           const functions = window.firebase.functions();
           const notifyAvailabilityChanged = functions.httpsCallable('notifyAvailabilityChanged');
-          notifyAvailabilityChanged().catch(error => console.error('Failed to send notification', error));
+          notifyAvailabilityChanged({ available: valueChecked }).catch(error => console.error('Failed to send notification', error));
         })
         .catch((error) => console.error('Error updating db', error));
     },
