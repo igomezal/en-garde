@@ -24,6 +24,19 @@ export default new Vuex.Store({
     notifications: [],
   },
   mutations: {
+    clearStore(state) {
+      state = {
+        user: undefined,
+        snackbar: {
+          status: false,
+          text: '',
+        },
+        dutyDays: {},
+        loadingUserData: true,
+        notifications: [],
+      };
+      return state;
+    },
     syncNotifications(state, notifications) {
       state.notifications = notifications;
     },

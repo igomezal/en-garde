@@ -50,6 +50,13 @@
           >
             <v-list-item-title>About it</v-list-item-title>
           </v-list-item>
+          <v-divider v-if="user"></v-divider>
+          <v-list-item
+            v-if="user"
+            @click="signOut"
+          >
+            <v-list-item-title>Sign Out</v-list-item-title>
+          </v-list-item>
         </v-list>
       </v-menu>
     </v-app-bar>
@@ -103,6 +110,7 @@
 <script>
 import {
   messaging,
+  deleteRegisteredToken,
   getPermissionForNotification,
   askForPermissionToReceiveNotifications,
 } from './utils/push-notifications.js';
@@ -219,7 +227,13 @@ export default {
     },
     closeSnackbar() {
       this.$store.commit('closeSnackbar');
-    }
+    },
+    signOut() {
+      window.firebase.auth().signOut();
+      deleteRegisteredToken();
+      this.$store.commit('clearStore');
+      // clear indexdb
+    },
   }
 };
 </script>
