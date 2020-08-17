@@ -1,4 +1,11 @@
-export const messaging = window.firebase.messaging();
+export const messaging = window.firebase.messaging.isSupported() ? window.firebase.messaging() : { 
+  requestPermission: () => {},
+  getToken: () => {},
+  deleteToken: () => {},
+  usePublicVapidKey: () => {},
+  onMessage: () => {},
+  onTokenRefresh: () => {},
+};
 
 messaging.usePublicVapidKey('BM4mu4tlGOhepZM7w2mC-3lP0jtpK1WOU7b5btrfx3ymjRVrmpUMBmYL71vs0JIAFm8pCI_YMYsVJdYyoQI4Igk');
 
