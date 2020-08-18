@@ -1,6 +1,11 @@
 module.exports = {
-  "transpileDependencies": [
-    "vuetify"
+  pluginOptions: {
+    webpackBundleAnalyzer: {
+      openAnalyzer: false,
+    },
+  },
+  transpileDependencies: [
+    'vuetify',
   ],
   chainWebpack: config => {
     config

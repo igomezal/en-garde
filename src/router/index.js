@@ -1,7 +1,5 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Dashboard from '../views/Dashboard.vue';
-import AuthenticationPage from '../views/AuthenticationPage'
 
 Vue.use(VueRouter)
 
@@ -11,12 +9,12 @@ const routes = [
   {
     path: '/',
     name: 'Login',
-    component: AuthenticationPage,
+    component: import(/* webpackChunkName: "authentication" */ '../views/AuthenticationPage.vue'),
   },
   {
     path: '/dashboard',
     name: 'Dashboard',
-    component: Dashboard,
+    component: import(/* webpackChunkName: "dashboard" */ '../views/Dashboard.vue'),
   },
   {
     path: '/profile',
