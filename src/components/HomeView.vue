@@ -89,7 +89,6 @@
     methods: {
       isAvailabilityCheckDisabled(telephone, dutyDays) {
         if(telephone && Object.keys(dutyDays).length != 0) {
-          debugger;
           const currentDutyDay = dutyDays[new Date().toISOString().split('T')[0]];
           return currentDutyDay ? !currentDutyDay.includes(this.user.uid) : true;
         }
