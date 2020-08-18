@@ -49,6 +49,12 @@ export default new Vuex.Store({
     markNotificationAsRead(state, notificationId) {
       state.notifications[notificationId].read = true;
     },
+    markAllNotificationsAsRead(state) {
+      state.notifications = state.notifications.map(notification => ({ ...notification, read: true }));
+    },
+    deleteAllNotifications(state) {
+      state.notifications = [];
+    },
     startLoadingUserData(state) {
       state.loadingUserData = true;
     },
