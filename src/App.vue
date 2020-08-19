@@ -172,10 +172,10 @@ export default {
           askForPermissionToReceiveNotifications()
             .then(token => this.$store.dispatch('updateNotificationToken', token));
         }
-
+        
         messaging.onMessage((payload) => {
           // Get notifications when app is opened
-          this.$store.commit('addNotification', payload.notification);
+          this.$store.commit('addNotification', { ...payload.notification, timestamp: payload.data.timestamp });
         });
 
         messaging.onTokenRefresh(() => {

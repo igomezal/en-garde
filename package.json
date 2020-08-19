@@ -10,6 +10,7 @@
   "dependencies": {
     "animate.css": "^4.1.0",
     "core-js": "^3.6.5",
+    "date-fns": "^2.15.0",
     "intl-tel-input": "^17.0.3",
     "minify-css-string": "^1.0.0",
     "register-service-worker": "^1.7.1",

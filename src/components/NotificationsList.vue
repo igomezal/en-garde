@@ -21,6 +21,7 @@
               <v-list-item-content>
                 <v-list-item-title v-text="notification.title"></v-list-item-title>
                 <v-list-item-subtitle class="text--primary" v-text="notification.body"></v-list-item-subtitle>
+                <v-list-item-subtitle v-text="formatNotificationDate(notification.timestamp)"></v-list-item-subtitle>
               </v-list-item-content>
               <v-list-item-action>
                 <v-btn icon @click="deleteNotification(index)">
@@ -68,6 +69,8 @@
 </style>
 
 <script>
+import { formatDistance } from 'date-fns';
+
 export default {
   name: "NotificationsList",
   props: {
@@ -92,6 +95,9 @@ export default {
     deleteAllNotifications() {
       this.$store.commit("deleteAllNotifications");
     },
+    formatNotificationDate(timestamp) {
+      return formatDistance(new Date(Number(timestamp)), new Date(), { addSuffix: true });
+    }
   },
 };
 </script>
