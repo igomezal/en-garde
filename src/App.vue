@@ -167,7 +167,8 @@ export default {
         this.$store.commit('updateUser', user);
         this.$store.dispatch('getUserInfo');
         this.$store.dispatch('getDutyDays');
-
+        this.$store.dispatch('syncNotifications');
+        
         if(getPermissionForNotification()) {
           askForPermissionToReceiveNotifications()
             .then(token => this.$store.dispatch('updateNotificationToken', token));
@@ -175,7 +176,7 @@ export default {
         
         messaging.onMessage((payload) => {
           // Get notifications when app is opened
-          this.$store.commit('addNotification', { ...payload.notification, timestamp: payload.data.timestamp });
+          this.$store.dispatch('addNotification', { ...payload.notification, timestamp: payload.data.timestamp });
         });
 
         messaging.onTokenRefresh(() => {

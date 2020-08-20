@@ -12,8 +12,8 @@
     <v-list three-line>
       <v-list-item-group>
         <template v-for="(notification, index) in notifications.slice().reverse()">
-          <v-divider v-if="index === 0" :key="index + 'upper-divider'"></v-divider>
-          <v-list-item :key="index + notification.title" @click="markAsRead(index)">
+          <v-divider v-if="index === 0" :key="notification.id + 'upper-divider'"></v-divider>
+          <v-list-item :key="index + notification.title" @click="markAsRead(notification.id)">
             <template>
               <v-list-item-avatar>
                 <v-icon :class="{ 'no-new-notification': notification.read }">mdi-new-box</v-icon>
@@ -24,13 +24,13 @@
                 <v-list-item-subtitle v-text="formatNotificationDate(notification.timestamp)"></v-list-item-subtitle>
               </v-list-item-content>
               <v-list-item-action>
-                <v-btn icon @click="deleteNotification(index)">
+                <v-btn icon @click="deleteNotification(notification.id)">
                   <v-icon>mdi-delete</v-icon>
                 </v-btn>
               </v-list-item-action>
             </template>
           </v-list-item>
-          <v-divider v-if="index + 1 < notifications.length" :key="index + 'bottom-divider'"></v-divider>
+          <v-divider v-if="index + 1 < notifications.length" :key="notification.id + 'bottom-divider'"></v-divider>
         </template>
       </v-list-item-group>
     </v-list>
@@ -78,24 +78,27 @@ export default {
   },
   methods: {
     deleteNotification(notificationId) {
-      this.$store.commit(
+      this.$store.dispatch(
         "deleteNotification",
-        this.notifications.length - 1 - notificationId
+        notificationId,
       );
     },
     markAsRead(notificationId) {
-      this.$store.commit(
+      this.$store.dispatch(
         "markNotificationAsRead",
-        this.notifications.length - 1 - notificationId
+        notificationId,
       );
     },
     markAllNotificationsAsRead() {
-      this.$store.commit("markAllNotificationsAsRead");
+      this.$store.dispatch("markAllNotificationsAsRead");
     },
     deleteAllNotifications() {
-      this.$store.commit("deleteAllNotifications");
+      this.$store.dispatch("deleteAllNotifications");
     },
     formatNotificationDate(timestamp) {
+      if(timestamp === '' || isNaN(timestamp)) {
+        return '';
+      }
       return formatDistance(new Date(Number(timestamp)), new Date(), { addSuffix: true });
     }
   },

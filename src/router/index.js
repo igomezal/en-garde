@@ -38,7 +38,8 @@ const routes = [
 ];
 
 const router = new VueRouter({
-  routes
+  routes,
+  mode: 'history',
 });
 
 router.beforeEach((to, from, next) => {
@@ -46,6 +47,11 @@ router.beforeEach((to, from, next) => {
     history = [];
   } else if(!to.params.back) {
     if(from.name) history.push(from.name);
+  }
+
+  const foundHistoryElement = history.indexOf(to.name);
+  if(foundHistoryElement > -1) {
+    history.splice(foundHistoryElement, 1);
   }
 
   next();
