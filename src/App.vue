@@ -232,8 +232,8 @@ export default {
     signOut() {
       window.firebase.auth().signOut();
       deleteRegisteredToken();
+      this.$store.dispatch('deleteAllNotifications');
       this.$store.commit('clearStore');
-      // clear indexdb
     },
   }
 };
