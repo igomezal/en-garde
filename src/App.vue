@@ -168,6 +168,12 @@ export default {
         this.$store.dispatch('getUserInfo');
         this.$store.dispatch('getDutyDays');
         this.$store.dispatch('syncNotifications');
+
+        document.addEventListener('visibilitychange', () => {
+          if(!document.hidden) {
+            this.$store.dispatch('syncNotifications');
+          }
+        });
         
         if(getPermissionForNotification()) {
           askForPermissionToReceiveNotifications()

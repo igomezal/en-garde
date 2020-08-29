@@ -13,7 +13,7 @@
       <v-list-item-group>
         <template v-for="(notification, index) in notifications.slice().reverse()">
           <v-divider v-if="index === 0" :key="notification.id + 'upper-divider'"></v-divider>
-          <v-list-item :key="index + notification.title" @click="markAsRead(notification.id)">
+          <v-list-item :key="notification.id + notification.title" @click="markAsRead(notification.id)">
             <template>
               <v-list-item-avatar>
                 <v-icon :class="{ 'no-new-notification': notification.read }">mdi-new-box</v-icon>

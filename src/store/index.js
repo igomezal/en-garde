@@ -39,7 +39,7 @@ export default new Vuex.Store({
       return state;
     },
     syncNotifications(state, notifications) {
-      state.notifications = notifications;
+      state.notifications = [...notifications];
     },
     addNotification(state, notification) {
       state.notifications.push({ ...notification, read: false });
@@ -50,7 +50,12 @@ export default new Vuex.Store({
     },
     markNotificationAsRead(state, notificationId) {
       const indexToUpdate = state.notifications.findIndex(notification => notification.id === notificationId);
-      state.notifications[indexToUpdate].read = true;
+      state.notifications[indexToUpdate] = {
+        ...state.notifications[indexToUpdate],
+        read: true,
+      };
+
+      state.notifications = [...state.notifications];
     },
     markAllNotificationsAsRead(state) {
       state.notifications = state.notifications.map((notification) => ({
