@@ -1,7 +1,5 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Dashboard from '../views/Dashboard.vue';
-import AuthenticationPage from '../views/AuthenticationPage'
 
 Vue.use(VueRouter)
 
@@ -11,22 +9,27 @@ const routes = [
   {
     path: '/',
     name: 'Login',
-    component: AuthenticationPage,
+    component: () => import(/* webpackChunkName: "authentication" */ '../views/AuthenticationPage.vue'),
   },
   {
     path: '/dashboard',
     name: 'Dashboard',
-    component: Dashboard
+    component: () => import(/* webpackChunkName: "dashboard" */ '../views/Dashboard.vue'),
   },
   {
     path: '/profile',
     name: 'Profile',
-    component: () => import(/* webpackChunkName: "profile" */ '../views/ProfilePage.vue')
+    component: () => import(/* webpackChunkName: "profile" */ '../views/ProfilePage.vue'),
+  },
+  {
+    path: '/notifications',
+    name: 'Notifications',
+    component: () => import(/* webpackChunkName: "notifications" */ '../views/NotificationsPage.vue'),
   },
   {
     path: '/about',
     name: 'About',
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
+    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue'),
   },
   {
     path: '*',
@@ -35,7 +38,8 @@ const routes = [
 ];
 
 const router = new VueRouter({
-  routes
+  routes,
+  mode: 'history',
 });
 
 router.beforeEach((to, from, next) => {
@@ -43,6 +47,11 @@ router.beforeEach((to, from, next) => {
     history = [];
   } else if(!to.params.back) {
     if(from.name) history.push(from.name);
+  }
+
+  const foundHistoryElement = history.indexOf(to.name);
+  if(foundHistoryElement > -1) {
+    history.splice(foundHistoryElement, 1);
   }
 
   next();

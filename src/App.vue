@@ -3,7 +3,6 @@
     <v-app-bar
       app
       color="background-app-bar"
-      elevate-on-scroll
     >
       <v-btn icon @click="goBack" v-if="showBackButton()">
         <v-icon>mdi-arrow-left</v-icon>
@@ -15,6 +14,16 @@
 
       <v-btn v-if="user" icon @click="goToProfilePage">
         <v-icon>mdi-account</v-icon>
+      </v-btn>
+      <v-btn v-if="user" icon @click="goToNotificationsPage">
+          <v-badge
+            color="green"
+            :content="newNotifications"
+            :value="newNotifications"
+            overlap
+          >
+            <v-icon>mdi-bell</v-icon>
+          </v-badge>
       </v-btn>
       <v-menu
         left
@@ -40,6 +49,13 @@
             @click="goToAboutPage"
           >
             <v-list-item-title>About it</v-list-item-title>
+          </v-list-item>
+          <v-divider v-if="user"></v-divider>
+          <v-list-item
+            v-if="user"
+            @click="signOut"
+          >
+            <v-list-item-title>Sign Out</v-list-item-title>
           </v-list-item>
         </v-list>
       </v-menu>
@@ -92,6 +108,13 @@
 </style>
 
 <script>
+import {
+  messaging,
+  deleteRegisteredToken,
+  getPermissionForNotification,
+  askForPermissionToReceiveNotifications,
+} from './utils/push-notifications.js';
+
 export default {
   name: 'App',
   data: () => ({
@@ -106,6 +129,9 @@ export default {
     },
     snackbar: function() {
       return this.$store.state.snackbar;
+    },
+    newNotifications: function() {
+      return this.$store.state.notifications.filter((notification) => !notification.read).length;
     },
   },
   watch: {
@@ -141,6 +167,29 @@ export default {
         this.$store.commit('updateUser', user);
         this.$store.dispatch('getUserInfo');
         this.$store.dispatch('getDutyDays');
+        this.$store.dispatch('syncNotifications');
+
+        document.addEventListener('visibilitychange', () => {
+          if(!document.hidden) {
+            this.$store.dispatch('syncNotifications');
+          }
+        });
+        
+        if(getPermissionForNotification()) {
+          askForPermissionToReceiveNotifications()
+            .then(token => this.$store.dispatch('updateNotificationToken', token));
+        }
+        
+        messaging.onMessage((payload) => {
+          // Get notifications when app is opened
+          this.$store.dispatch('addNotification', { ...payload.notification, timestamp: payload.data.timestamp });
+        });
+
+        messaging.onTokenRefresh(() => {
+          askForPermissionToReceiveNotifications()
+            .then(token => this.$store.dispatch('updateNotificationToken', token));
+        });
+
         if(this.$router.currentRoute.name === 'Login') {
           this.$router.push({ name: 'Dashboard' });
         }
@@ -173,6 +222,11 @@ export default {
         this.$router.push({ name: 'Profile' });
       }
     },
+    goToNotificationsPage() {
+      if(this.$router.currentRoute.name !== 'Notifications') {
+        this.$router.push({ name: 'Notifications' });
+      }
+    },
     checkPermissions() {
       if(this.user === null) {
         this.$router.push({ name: 'Login' });
@@ -180,7 +234,13 @@ export default {
     },
     closeSnackbar() {
       this.$store.commit('closeSnackbar');
-    }
+    },
+    signOut() {
+      window.firebase.auth().signOut();
+      deleteRegisteredToken();
+      this.$store.dispatch('deleteAllNotifications');
+      this.$store.commit('clearStore');
+    },
   }
 };
 </script>

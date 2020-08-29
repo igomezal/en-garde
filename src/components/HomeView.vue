@@ -1,9 +1,11 @@
 <template>
   <v-container>
     <v-row>
-      <v-col cols="12" v-if="!telephone">
-        <v-alert 
+      <v-col cols="12" class="without-padding">
+        <v-alert
+          :value="!loadingUserData && !telephone"
           type="warning"
+          transition="scroll-y-transition"
           prominent>
           Please set your telephone number in the profile page.
         </v-alert>
@@ -38,7 +40,6 @@
           </v-expand-transition>
         </v-card>
       </v-col>
-
       <v-col cols="12">
         <v-card
           class="mx-auto"
@@ -46,7 +47,9 @@
           <v-card-title>
             On duty calendar
           </v-card-title>
-          <v-calendar>
+          <v-calendar
+            :weekdays="[1,2,3,4,5,6,0]"
+          >
           </v-calendar>
         </v-card>
       </v-col>
@@ -57,6 +60,11 @@
 <style scoped>
   .normal-max-width {
     max-width: 300px;
+  }
+
+  .without-padding {
+    padding-top: 0px;
+    padding-bottom: 0px;
   }
 </style>
 
@@ -85,6 +93,9 @@
       user() {
         return this.$store.state.user;
       },
+      loadingUserData() {
+        return this.$store.state.loadingUserData;
+      }
     },
     methods: {
       isAvailabilityCheckDisabled(telephone, dutyDays) {
