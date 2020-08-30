@@ -2,14 +2,14 @@
   <v-card class="mx-auto">
     <v-card-title class="no-bottom-padding card-with-actions">
       <div class="position-left">Recent notifications</div>
-      <v-btn icon @click="markAllNotificationsAsRead">
+      <v-btn icon @click="markAllNotificationsAsRead" aria-label="Mark notifications as read">
         <v-icon>mdi-email-open-multiple</v-icon>
       </v-btn>
-      <v-btn icon @click="deleteAllNotifications">
+      <v-btn icon @click="deleteAllNotifications" aria-label="Clear all notifications">
         <v-icon>mdi-notification-clear-all</v-icon>
       </v-btn>
     </v-card-title>
-    <v-list three-line>
+    <v-list three-line v-if="notifications.length !== 0">
       <v-list-item-group>
         <template v-for="(notification, index) in notifications.slice().reverse()">
           <v-divider v-if="index === 0" :key="notification.id + 'upper-divider'"></v-divider>

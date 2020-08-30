@@ -4,18 +4,18 @@
       app
       color="background-app-bar"
     >
-      <v-btn icon @click="goBack" v-if="showBackButton()">
+      <v-btn icon @click="goBack" v-if="showBackButton()" aria-label="Go Back">
         <v-icon>mdi-arrow-left</v-icon>
       </v-btn>
 
-      <v-toolbar-title>{{pageTitle}}</v-toolbar-title>
+      <v-toolbar-title><h1>{{pageTitle}}</h1></v-toolbar-title>
 
       <v-spacer></v-spacer>
 
-      <v-btn v-if="user" icon @click="goToProfilePage">
+      <v-btn v-if="user" icon @click="goToProfilePage" aria-label="Profile">
         <v-icon>mdi-account</v-icon>
       </v-btn>
-      <v-btn v-if="user" icon @click="goToNotificationsPage">
+      <v-btn v-if="user" icon @click="goToNotificationsPage" aria-label="Notifications">
           <v-badge
             color="green"
             :content="newNotifications"
@@ -28,17 +28,18 @@
       <v-menu
         left
         bottom
+        role="menu"
       >
         <template v-slot:activator="{ on, attrs }">
           <v-btn
             icon
             v-bind="attrs"
             v-on="on"
+            aria-label="Options"
           >
             <v-icon>mdi-dots-vertical</v-icon>
           </v-btn>
         </template>
-
         <v-list>
           <v-list-item
             @click="changeTheme"
@@ -87,13 +88,21 @@
   </v-app>
 </template>
 
-<style src="intl-tel-input/build/css/intlTelInput.min.css">
-</style>
-
-<style src="animate.css/animate.min.css">
-</style>
-
 <style>
+  .v-toolbar__title h1 {
+    font-size: 1.25rem;
+    line-height: 1.5;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-weight: normal;
+    padding: 0;
+    margin: 0;
+    margin-block-start: 0;
+    margin-block-end: 0;
+    margin-inline-start: 0;
+    margin-inline-end: 0;
+  }
   .v-snack__content {
     color: var(--v-snackbar-text-color-base);
   }
@@ -104,6 +113,46 @@
 
   .main {
     background-color: var(--v-background-base);
+  }
+
+  /* animate-css styles to not load the whole library */
+  :root {
+    --animate-duration: 1s;
+    --animate-delay: 1s;
+    --animate-repeat: 1;
+  }
+
+  .animate__animated {
+    -webkit-animation-duration: 1s;
+    animation-duration: 1s;
+    -webkit-animation-duration: var(--animate-duration);
+    animation-duration: var(--animate-duration);
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+  }
+
+  /* Fading entrances  */
+  @-webkit-keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+
+    to {
+      opacity: 1;
+    }
+  }
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+
+    to {
+      opacity: 1;
+    }
+  }
+  .animate__fadeIn {
+    -webkit-animation-name: fadeIn;
+    animation-name: fadeIn;
   }
 </style>
 

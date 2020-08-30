@@ -6,8 +6,26 @@
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <link rel="icon" href="<%= BASE_URL %>favicon.ico">
     <title><%= htmlWebpackPlugin.options.title %></title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900">
+
+    <link rel="dns-prefetch" href="//fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900&display=swap">
+
+    <link rel="preconnect" href="https://cdn.jsdelivr.net/" crossorigin>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@latest/css/materialdesignicons.min.css">
+
+    <link rel="preload" href="https://www.gstatic.com/firebasejs/7.18.0/firebase-app.js" as="script">
+    <link rel="preload" href="https://www.gstatic.com/firebasejs/7.18.0/firebase-analytics.js" as="script">
+    <link rel="preload" href="https://www.gstatic.com/firebasejs/7.18.0/firebase-auth.js" as="script">
+    <link rel="preload" href="https://www.gstatic.com/firebasejs/7.18.0/firebase-firestore.js" as="script">
+    <link rel="preload" href="https://www.gstatic.com/firebasejs/7.18.0/firebase-messaging.js" as="script">
+    <link rel="preload" href="https://www.gstatic.com/firebasejs/7.18.0/firebase-functions.js" as="script">
+  </head>
+  <body>
+    <noscript>
+      <strong>We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
+    </noscript>
+    <div id="app"></div>
 
     <script src="https://www.gstatic.com/firebasejs/7.18.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/7.18.0/firebase-analytics.js"></script>
@@ -32,12 +50,6 @@
         firebase.initializeApp(firebaseConfig);
         firebase.analytics();
     </script>
-  </head>
-  <body>
-    <noscript>
-      <strong>We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
-    </noscript>
-    <div id="app"></div>
     <!-- built files will be auto injected -->
   </body>
 </html>

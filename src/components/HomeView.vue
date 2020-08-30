@@ -26,6 +26,7 @@
             <v-btn
               icon
               @click="showMoreInfoAvailability = !showMoreInfoAvailability"
+              aria-label="Show more info"
             >
               <v-icon>{{ showMoreInfoAvailability ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
             </v-btn>
