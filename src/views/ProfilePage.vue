@@ -27,12 +27,15 @@
   </v-container>
 </template>
 
+<style src="intl-tel-input/build/css/intlTelInput.min.css">
+</style>
+
 <style scoped>
-.v-application ul {
-  padding-left: 0;
-  list-style-type: none;
-  margin-bottom: 20px;
-}
+  .v-application ul {
+    padding-left: 0;
+    list-style-type: none;
+    margin-bottom: 20px;
+  }
 </style>
 
 <script>

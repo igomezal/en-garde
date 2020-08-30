@@ -1,5 +1,4 @@
 <template>
-  <div>
     <li>
       <v-tooltip bottom>
         <template v-slot:activator="{ on, attrs }">
@@ -8,9 +7,8 @@
         <span>{{ altText }}</span>
       </v-tooltip>
       {{ info }}
+      <v-divider></v-divider>
     </li>
-    <v-divider></v-divider>
-  </div>
 </template>
 
 <style scoped>
