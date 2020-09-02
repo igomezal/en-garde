@@ -289,6 +289,7 @@ export default {
       deleteRegisteredToken();
       this.$store.dispatch('deleteAllNotifications');
       this.$store.commit('clearStore');
+      window.localStorage.clear();
     },
   }
 };
