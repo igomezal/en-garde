@@ -1,13 +1,19 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import { addNotification, getAllNotifications, deleteAllNotifications, deleteNotification, updateNotification } from '../utils/store-indexddb';
+import {
+  addNotification,
+  getAllNotifications,
+  deleteAllNotifications,
+  deleteNotification,
+  updateNotification,
+} from '../utils/store-indexddb';
 
 Vue.use(Vuex);
 
 const db = window.firebase.firestore();
 
 const basicUserData = {
-  availability: false,
+  availability: true,
   telephone: '',
 };
 
@@ -45,11 +51,15 @@ export default new Vuex.Store({
       state.notifications.push({ ...notification, read: false });
     },
     deleteNotification(state, notificationId) {
-      const indexToDelete = state.notifications.findIndex(notification => notification.id === notificationId);
+      const indexToDelete = state.notifications.findIndex(
+        (notification) => notification.id === notificationId
+      );
       state.notifications.splice(indexToDelete, 1);
     },
     markNotificationAsRead(state, notificationId) {
-      const indexToUpdate = state.notifications.findIndex(notification => notification.id === notificationId);
+      const indexToUpdate = state.notifications.findIndex(
+        (notification) => notification.id === notificationId
+      );
       state.notifications[indexToUpdate] = {
         ...state.notifications[indexToUpdate],
         read: true,
@@ -76,13 +86,10 @@ export default new Vuex.Store({
       state.user = user;
     },
     processDutyDays(state, dutyDaysDoc) {
-      state.dutyDays = dutyDaysDoc.docs.reduce(
-        (accumulator, currentValue) => {
-          accumulator[currentValue.id] = currentValue.data().users;
-          return accumulator;
-        },
-        {}
-      );
+      state.dutyDays = dutyDaysDoc.docs.reduce((accumulator, currentValue) => {
+        accumulator[currentValue.id] = currentValue.data().users;
+        return accumulator;
+      }, {});
     },
     openSnackbar(state, snackbar) {
       state.snackbar = snackbar;
@@ -109,17 +116,13 @@ export default new Vuex.Store({
                 });
                 commit('finishLoadingUserData');
               })
-              .catch((error) =>
-                console.error('Error creating user', error)
-              );
+              .catch((error) => console.error('Error creating user', error));
           } else {
             commit('updateUser', { ...state.user, ...doc.data() });
             commit('finishLoadingUserData');
           }
         })
-        .catch((error) =>
-          console.error('Error getting user data', error)
-        );
+        .catch((error) => console.error('Error getting user data', error));
     },
     getDutyDays({ commit }) {
       db.collection('dutyDays')
@@ -127,9 +130,7 @@ export default new Vuex.Store({
         .then((docs) => {
           commit('processDutyDays', docs);
         })
-        .catch((error) =>
-          console.error('Error getting the dutyDays', error)
-        );
+        .catch((error) => console.error('Error getting the dutyDays', error));
     },
     updateAvailability({ commit, state }, valueChecked) {
       const uid = state.user.uid;
@@ -186,23 +187,27 @@ export default new Vuex.Store({
       });
     },
     deleteNotification({ commit, state }, notificationId) {
-      const notification = state.notifications.find(notification => notification.id === notificationId);
-      if(notification) {
+      const notification = state.notifications.find(
+        (notification) => notification.id === notificationId
+      );
+      if (notification) {
         deleteNotification(notificationId).then(() => {
           commit('deleteNotification', notificationId);
         });
       }
     },
     markNotificationAsRead({ commit, state }, notificationId) {
-      const notification = state.notifications.find(notification => notification.id === notificationId);
-      if(notification) {
-        updateNotification({...notification, read: true }).then(() => {
+      const notification = state.notifications.find(
+        (notification) => notification.id === notificationId
+      );
+      if (notification) {
+        updateNotification({ ...notification, read: true }).then(() => {
           commit('markNotificationAsRead', notificationId);
         });
       }
     },
     markAllNotificationsAsRead({ commit, state }) {
-      state.notifications.forEach(notification => {
+      state.notifications.forEach((notification) => {
         updateNotification({ ...notification, read: true });
       });
       commit('markAllNotificationsAsRead');
@@ -215,8 +220,8 @@ export default new Vuex.Store({
     deleteAllNotifications({ commit }) {
       deleteAllNotifications().then(() => {
         commit('deleteAllNotifications');
-      })
-    }
+      });
+    },
   },
   modules: {},
 });
