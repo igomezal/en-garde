@@ -200,7 +200,7 @@ export default {
     const storedDarkTheme = JSON.parse(localStorage.getItem('darkTheme'));
     if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches && storedDarkTheme === null) { // Dark mode base on device settings
       this.$vuetify.theme.dark = true;
-      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
+      window.matchMedia('(prefers-color-scheme: dark)').addListener(event => {
         if(event.matches) {
           this.$vuetify.theme.dark = true;
         } else {
@@ -226,7 +226,7 @@ export default {
         
         if(getPermissionForNotification()) {
           askForPermissionToReceiveNotifications()
-            .then(token => this.$store.dispatch('updateNotificationToken', token));
+            .then(token => this.$store.dispatch('updateNotificationToken', token || null));
         }
         
         messaging.onMessage((payload) => {
