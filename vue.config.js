@@ -14,5 +14,15 @@ module.exports = {
         args[0].title = 'En Garde';
         return args;
       });
+    config.plugin('preload').tap(() => {
+      return [
+        {
+          rel: 'preload',
+          fileWhitelist: [
+            /.*authentication~dashboard~notifications~profile.*\.css/,
+          ],
+        },
+      ];
+    });
   },
 }
