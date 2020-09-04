@@ -27,7 +27,7 @@
     methods: {
       onGoogleAuthentication: function() {
           const provider = new firebase.auth.GoogleAuthProvider();
-          window.firebase.auth().signInWithRedirect(provider);
+          firebase.auth().signInWithRedirect(provider);
       },
     }
   }
