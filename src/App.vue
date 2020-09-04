@@ -158,7 +158,6 @@
 
 <script>
 import firebase from './utils/firebase-init.js';
-import 'firebase/analytics';
 import 'firebase/auth';
 
 import {
