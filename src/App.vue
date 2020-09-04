@@ -157,6 +157,10 @@
 </style>
 
 <script>
+import firebase from './utils/firebase-init.js';
+import 'firebase/analytics';
+import 'firebase/auth';
+
 import {
   messaging,
   deleteRegisteredToken,
@@ -211,7 +215,7 @@ export default {
       this.$vuetify.theme.dark = storedDarkTheme === null ? false : storedDarkTheme;
     }
 
-    window.firebase.auth().onAuthStateChanged((user) => {
+    firebase.auth().onAuthStateChanged((user) => {
       if(user) {
         this.$store.commit('updateUser', user);
         this.$store.dispatch('getUserInfo');
@@ -285,7 +289,7 @@ export default {
       this.$store.commit('closeSnackbar');
     },
     signOut() {
-      window.firebase.auth().signOut();
+      firebase.auth().signOut();
       deleteRegisteredToken();
       this.$store.dispatch('deleteAllNotifications');
       this.$store.commit('clearStore');

@@ -1,4 +1,7 @@
-export const messaging = window.firebase.messaging.isSupported() ? window.firebase.messaging() : { 
+import firebase from './firebase-init.js';
+import 'firebase/messaging';
+
+export const messaging = firebase.messaging.isSupported() ? firebase.messaging() : { 
   requestPermission: () => {},
   getToken: () => {},
   deleteToken: () => {},

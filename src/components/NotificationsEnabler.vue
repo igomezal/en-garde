@@ -17,6 +17,8 @@
 </template>
 
 <script>
+import firebase from '../utils/firebase-init.js';
+import 'firebase/messaging';
 import { 
   askForPermissionToReceiveNotifications, 
   deleteRegisteredToken,
@@ -45,7 +47,7 @@ export default {
   },
   methods: {
       notificationsNotSupported() {
-          return !window.firebase.messaging.isSupported()
+          return !firebase.messaging.isSupported()
       },
   },
 };

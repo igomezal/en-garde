@@ -12,6 +12,9 @@
 </template>
 
 <script>
+  import firebase from '../utils/firebase-init.js';
+  import 'firebase/auth';
+
   export default {
     name: 'AuthenticationPage',
     data: () => ({
@@ -23,7 +26,7 @@
     },
     methods: {
       onGoogleAuthentication: function() {
-          const provider = new window.firebase.auth.GoogleAuthProvider();
+          const provider = new firebase.auth.GoogleAuthProvider();
           window.firebase.auth().signInWithRedirect(provider);
       },
     }

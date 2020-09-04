@@ -1,5 +1,8 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
+import firebase from '../utils/firebase-init.js';
+import 'firebase/firestore';
+import 'firebase/functions';
 import {
   addNotification,
   getAllNotifications,
@@ -10,7 +13,7 @@ import {
 
 Vue.use(Vuex);
 
-const db = window.firebase.firestore();
+const db = firebase.firestore();
 
 const basicUserData = {
   availability: true,
@@ -144,7 +147,7 @@ export default new Vuex.Store({
             ...state.user,
             availability: valueChecked,
           });
-          const functions = window.firebase.functions();
+          const functions = firebase.functions();
           const notifyAvailabilityChanged = functions.httpsCallable(
             'notifyAvailabilityChanged'
           );
