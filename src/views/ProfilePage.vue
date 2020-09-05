@@ -41,6 +41,7 @@
 <script>
 import intlTelInput from "intl-tel-input/build/js/intlTelInput.js";
 import utilsScript from "intl-tel-input/build/js/utils.js";
+import { mapState } from 'vuex';
 import ProfileField from "../components/ProfileField.vue";
 
 let telephoneInput = undefined;
@@ -80,20 +81,21 @@ export default {
     ProfileField,
   },
   computed: {
-    user() {
-      return this.$store.state.user;
-    },
     telephone: {
       get() {
-        if (telephoneInput && this.$store.state.user.telephone)
-          telephoneInput.setNumber(this.$store.state.user.telephone);
-        return this.$store.state.user.telephone;
+        const { telephone } = this.$store.getters;
+        if (telephoneInput && telephone)
+          telephoneInput.setNumber(telephone);
+        return telephone;
       },
       set() {},
     },
     dark() {
       return this.$vuetify.theme.dark;
     },
+    ...mapState([
+      'user',
+    ]),
   },
   methods: {
     submit() {

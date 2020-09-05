@@ -15,15 +15,13 @@
   import firebase from '../utils/firebase-init.js';
   import 'firebase/auth';
 
+  import { mapState } from 'vuex';
+
   export default {
     name: 'AuthenticationPage',
-    data: () => ({
-    }),
-    computed: {
-      user() {
-        return this.$store.state.user;
-      },
-    },
+    computed: mapState([
+        'user',
+    ]),
     methods: {
       onGoogleAuthentication: function() {
           const provider = new firebase.auth.GoogleAuthProvider();

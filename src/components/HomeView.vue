@@ -70,6 +70,8 @@
 </style>
 
 <script>
+  import { mapState } from 'vuex';
+
   export default {
     name: 'HomeView',
 
@@ -79,24 +81,18 @@
     computed: {
       availability: {
         get() {
-          return this.$store.state.user ? this.$store.state.user.availability : false;
+          return this.$store.getters.availability;
         },
         set(valueChecked) {
           this.$store.dispatch('updateAvailability', valueChecked);
         },
       },
       telephone: function() {
-        return this.$store.state.user ? this.$store.state.user.telephone : undefined;
+        return this.$store.getters.telephone;
       },
-      dutyDays: function() {
-        return this.$store.state.dutyDays;
-      },
-      user() {
-        return this.$store.state.user;
-      },
-      loadingUserData() {
-        return this.$store.state.loadingUserData;
-      }
+      ...mapState([
+        'dutyDays', 'user', 'loadingUserData',
+      ]),
     },
     methods: {
       isAvailabilityCheckDisabled(telephone, dutyDays) {

@@ -33,6 +33,11 @@ export default new Vuex.Store({
     loadingUserData: true,
     notifications: [],
   },
+  getters: {
+    newNotifications: state => state.notifications.filter((notification) => !notification.read).length,
+    telephone: state => state.user ? state.user.telephone : undefined,
+    availability: state => state.user ? state.user.availability : false,
+  },
   mutations: {
     clearStore(state) {
       state = {

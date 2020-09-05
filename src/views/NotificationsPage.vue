@@ -17,16 +17,16 @@
 import NotificationsEnabler from '../components/NotificationsEnabler';
 import NotificationsList from '../components/NotificationsList';
 
+import { mapState } from 'vuex';
+
 export default {
   name: 'Notifications',
   components: {
     NotificationsEnabler,
     NotificationsList,
   },
-  computed: {
-    notifications() {
-      return this.$store.state.notifications;
-    }
-  }
+  computed: mapState([
+    'notifications',
+  ]),
 }
 </script>

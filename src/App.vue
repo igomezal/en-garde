@@ -160,6 +160,8 @@
 import firebase from './utils/firebase-init.js';
 import 'firebase/auth';
 
+import { mapState, mapGetters } from 'vuex';
+
 import {
   messaging,
   deleteRegisteredToken,
@@ -176,15 +178,12 @@ export default {
     pageTitle: function() {
       return this.$route.name === 'Login' ? this.applicationName : this.$route.name;
     },
-    user: function() {
-      return this.$store.state.user;
-    },
-    snackbar: function() {
-      return this.$store.state.snackbar;
-    },
-    newNotifications: function() {
-      return this.$store.state.notifications.filter((notification) => !notification.read).length;
-    },
+    ...mapState([
+      'user', 'snackbar',
+    ]),
+    ...mapGetters([
+      'newNotifications',
+    ]),
   },
   watch: {
     $route: {
