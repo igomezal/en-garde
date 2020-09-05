@@ -1,4 +1,4 @@
-<template>
+<template functional>
   <div>
     Hello
   </div>
@@ -7,9 +7,5 @@
 <script>
 export default {
   name: 'AboutView',
-  data: () => ({
-  }),
-  methods: {
-  }
 }
 </script>

@@ -82,7 +82,9 @@
 
     <v-main class="main">
       <transition name="router-anim" enter-active-class="animate__animated animate__fadeIn">
-        <router-view></router-view>
+        <keep-alive>
+          <router-view></router-view>
+        </keep-alive>
       </transition>
     </v-main>
   </v-app>

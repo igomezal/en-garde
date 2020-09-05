@@ -1,11 +1,11 @@
-<template>
+<template functional>
   <div class="about">
     <AboutView/>
   </div>
 </template>
 
 <script>
-import AboutView from '../components/AboutView';
+import AboutView from '@/components/AboutView';
 
 export default {
   name: 'About',

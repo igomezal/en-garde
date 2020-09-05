@@ -42,7 +42,7 @@
 import intlTelInput from "intl-tel-input/build/js/intlTelInput.js";
 import utilsScript from "intl-tel-input/build/js/utils.js";
 import { mapState } from 'vuex';
-import ProfileField from "../components/ProfileField.vue";
+import ProfileField from "@/components/ProfileField.vue";
 
 let telephoneInput = undefined;
 

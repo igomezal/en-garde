@@ -12,7 +12,7 @@
 </template>
 
 <script>
-  import firebase from '../utils/firebase-init.js';
+  import firebase from '@/utils/firebase-init.js';
   import 'firebase/auth';
 
   import { mapState } from 'vuex';

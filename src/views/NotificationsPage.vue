@@ -14,8 +14,8 @@
 </template>
 
 <script>
-import NotificationsEnabler from '../components/NotificationsEnabler';
-import NotificationsList from '../components/NotificationsList';
+import NotificationsEnabler from '@/components/NotificationsEnabler';
+import NotificationsList from '@/components/NotificationsList';
 
 import { mapState } from 'vuex';
 

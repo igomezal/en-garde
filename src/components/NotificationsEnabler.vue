@@ -17,14 +17,14 @@
 </template>
 
 <script>
-import firebase from '../utils/firebase-init.js';
+import firebase from '@/utils/firebase-init.js';
 import 'firebase/messaging';
 import { 
   askForPermissionToReceiveNotifications, 
   deleteRegisteredToken,
   setPermissionForNotification,
   getPermissionForNotification,
-} from '../utils/push-notifications.js';
+} from '@/utils/push-notifications.js';
 
 export default {
   name: "NotificationEnabler",
