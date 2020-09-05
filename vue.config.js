@@ -18,7 +18,9 @@ module.exports = {
       return [
         {
           rel: 'preload',
-          include: 'all',
+          fileWhitelist: [
+            /.*authentication~dashboard~notifications~profile.*\.css/,
+          ],
         },
       ];
     });
