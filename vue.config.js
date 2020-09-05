@@ -20,6 +20,7 @@ module.exports = {
           rel: 'preload',
           fileWhitelist: [
             /.*authentication~dashboard~notifications~profile.*\.css/,
+            /.*chunk-vendors.*\.css/,
           ],
         },
       ];
