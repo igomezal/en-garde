@@ -1,19 +1,17 @@
+const appTitle = 'En Garde';
+
 module.exports = {
   pluginOptions: {
     webpackBundleAnalyzer: {
       openAnalyzer: false,
     },
   },
-  transpileDependencies: [
-    'vuetify',
-  ],
-  chainWebpack: config => {
-    config
-      .plugin('html')
-      .tap(args => {
-        args[0].title = 'En Garde';
-        return args;
-      });
+  transpileDependencies: ['vuetify'],
+  chainWebpack: (config) => {
+    config.plugin('html').tap((args) => {
+      args[0].title = appTitle;
+      return args;
+    });
     config.plugin('preload').tap(() => {
       return [
         {
@@ -25,4 +23,11 @@ module.exports = {
       ];
     });
   },
-}
+  pwa: {
+    name: appTitle,
+    themeColor: '#ffffff',
+    msTileColor: '#ffffff',
+    appleMobileWebAppCapable: 'yes',
+    appleMobileWebAppStatusBarStyle: 'black',
+  },
+};
