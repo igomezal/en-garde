@@ -124,7 +124,7 @@ export default new Vuex.Store({
       const uid = state.user.uid;
 
       commit('startLoadingUserData');
-      db.doc(`users/${uid}`).get().then((doc) => {
+      db.doc(`users/${uid}`).onSnapshot((doc) => {
         const userData = doc.data();
         if (!userData) {
           createNewUser(uid)
@@ -143,7 +143,7 @@ export default new Vuex.Store({
       });
     },
     getDutyDays({ commit }) {
-      db.collection('dutyDays').get().then((docs) => {
+      db.collection('dutyDays').onSnapshot((docs) => {
         commit('processDutyDays', docs);
       });
     },
