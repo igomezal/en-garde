@@ -15,6 +15,14 @@ Vue.use(Vuex);
 
 const db = firebase.firestore();
 
+db.enablePersistence().catch(function(err) {
+  if (err.code == 'failed-precondition') {
+    console.info('Persistence mode is only supported when using one tab');
+  } else if (err.code == 'unimplemented') {
+    console.info(`The current browser doesn't support offline persistence`);
+  }
+});
+
 const basicUserData = {
   availability: true,
   telephone: '',
@@ -32,13 +40,18 @@ export default new Vuex.Store({
     dutyDays: {},
     loadingUserData: true,
     notifications: [],
+    onlineStatus: true,
   },
   getters: {
-    newNotifications: state => state.notifications.filter((notification) => !notification.read).length,
-    telephone: state => state.user ? state.user.telephone : undefined,
-    availability: state => state.user ? state.user.availability : false,
+    newNotifications: (state) =>
+      state.notifications.filter((notification) => !notification.read).length,
+    telephone: (state) => (state.user ? state.user.telephone : undefined),
+    availability: (state) => (state.user ? state.user.availability : false),
   },
   mutations: {
+    updateOnlineStatus(state, onlineStatus) {
+      state.onlineStatus = onlineStatus;
+    },
     clearStore(state) {
       state = {
         user: undefined,
@@ -111,34 +124,28 @@ export default new Vuex.Store({
       const uid = state.user.uid;
 
       commit('startLoadingUserData');
-      db.doc(`users/${uid}`)
-        .get()
-        .then((doc) => {
-          const userData = doc.data();
-          if (!userData) {
-            createNewUser(uid)
-              .then(() => {
-                commit('updateUser', {
-                  ...state.user,
-                  ...basicUserData,
-                });
-                commit('finishLoadingUserData');
-              })
-              .catch((error) => console.error('Error creating user', error));
-          } else {
-            commit('updateUser', { ...state.user, ...doc.data() });
-            commit('finishLoadingUserData');
-          }
-        })
-        .catch((error) => console.error('Error getting user data', error));
+      db.doc(`users/${uid}`).get().then((doc) => {
+        const userData = doc.data();
+        if (!userData) {
+          createNewUser(uid)
+            .then(() => {
+              commit('updateUser', {
+                ...state.user,
+                ...basicUserData,
+              });
+              commit('finishLoadingUserData');
+            })
+            .catch((error) => console.error('Error creating user', error));
+        } else {
+          commit('updateUser', { ...state.user, ...doc.data() });
+          commit('finishLoadingUserData');
+        }
+      });
     },
     getDutyDays({ commit }) {
-      db.collection('dutyDays')
-        .get()
-        .then((docs) => {
-          commit('processDutyDays', docs);
-        })
-        .catch((error) => console.error('Error getting the dutyDays', error));
+      db.collection('dutyDays').get().then((docs) => {
+        commit('processDutyDays', docs);
+      });
     },
     updateAvailability({ commit, state }, valueChecked) {
       const uid = state.user.uid;

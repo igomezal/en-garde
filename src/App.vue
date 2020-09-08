@@ -1,61 +1,53 @@
 <template>
   <v-app>
-    <v-app-bar
-      app
-      color="background-app-bar"
-    >
+    <v-app-bar app color="background-app-bar">
       <v-btn icon @click="goBack" v-if="showBackButton()" aria-label="Go Back">
         <v-icon>mdi-arrow-left</v-icon>
       </v-btn>
 
-      <v-toolbar-title><h1>{{pageTitle}}</h1></v-toolbar-title>
+      <v-toolbar-title>
+        <h1>{{ pageTitle }}</h1>
+      </v-toolbar-title>
 
       <v-spacer></v-spacer>
 
       <v-btn v-if="user" icon @click="goToProfilePage" aria-label="Profile">
         <v-icon>mdi-account</v-icon>
       </v-btn>
-      <v-btn v-if="user" icon @click="goToNotificationsPage" aria-label="Notifications">
-          <v-badge
-            color="green"
-            :content="newNotifications"
-            :value="newNotifications"
-            overlap
-          >
-            <v-icon>mdi-bell</v-icon>
-          </v-badge>
-      </v-btn>
-      <v-menu
-        left
-        bottom
-        role="menu"
+      <v-btn
+        v-if="user"
+        icon
+        @click="goToNotificationsPage"
+        aria-label="Notifications"
       >
+        <v-badge
+          color="green"
+          :content="newNotifications"
+          :value="newNotifications"
+          overlap
+        >
+          <v-icon>mdi-bell</v-icon>
+        </v-badge>
+      </v-btn>
+      <v-menu left bottom role="menu">
         <template v-slot:activator="{ on, attrs }">
-          <v-btn
-            icon
-            v-bind="attrs"
-            v-on="on"
-            aria-label="Options"
-          >
+          <v-btn icon v-bind="attrs" v-on="on" aria-label="Options">
             <v-icon>mdi-dots-vertical</v-icon>
           </v-btn>
         </template>
         <v-list>
-          <v-list-item
-            @click="changeTheme"
-          >
-            <v-list-item-title>Change to {{this.$vuetify.theme.dark ? 'light'  : 'dark'}} theme</v-list-item-title>
+          <v-list-item @click="changeTheme">
+            <v-list-item-title
+              >Change to
+              {{ this.$vuetify.theme.dark ? 'light' : 'dark' }}
+              theme</v-list-item-title
+            >
           </v-list-item>
-          <v-list-item
-            @click="goToAboutPage"
-          >
+          <v-list-item @click="goToAboutPage">
             <v-list-item-title>About it</v-list-item-title>
           </v-list-item>
           <v-divider v-if="user"></v-divider>
-          <v-list-item
-            v-if="user"
-            @click="signOut"
-          >
+          <v-list-item v-if="user" @click="signOut">
             <v-list-item-title>Sign Out</v-list-item-title>
           </v-list-item>
         </v-list>
@@ -63,25 +55,40 @@
     </v-app-bar>
 
     <v-snackbar
-        color="snackbar-background-color"
-        v-model="snackbar.status"
-        elevation="24"
-      >
-        {{ snackbar.text }}
-        <template v-slot:action="{ attrs }">
-          <v-btn
-            color="snackbar-action-color"
-            text
-            v-bind="attrs"
-            @click="closeSnackbar"
-          >
-            Close
-          </v-btn>
-        </template>
-      </v-snackbar>
+      color="snackbar-background-color"
+      v-model="snackbar.status"
+      elevation="24"
+    >
+      {{ snackbar.text }}
+      <template v-slot:action="{ attrs }">
+        <v-btn
+          color="snackbar-action-color"
+          text
+          v-bind="attrs"
+          @click="closeSnackbar"
+        >
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
 
     <v-main class="main">
-      <transition name="router-anim" enter-active-class="animate__animated animate__fadeIn">
+      <v-alert
+        v-if="!onlineStatus"
+        type="info"
+        icon="mdi-cloud-alert"
+        outlined
+        text
+        tile
+        class="v-justify-text"
+      >
+        Your device doesn't have connection but you can still use the
+        application with limited functionality.
+      </v-alert>
+      <transition
+        name="router-anim"
+        enter-active-class="animate__animated animate__fadeIn"
+      >
         <keep-alive>
           <router-view></router-view>
         </keep-alive>
@@ -91,71 +98,75 @@
 </template>
 
 <style>
-  .v-toolbar__title h1 {
-    font-size: 1.25rem;
-    line-height: 1.5;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    font-weight: normal;
-    padding: 0;
-    margin: 0;
-    margin-block-start: 0;
-    margin-block-end: 0;
-    margin-inline-start: 0;
-    margin-inline-end: 0;
-  }
-  .v-snack__content {
-    color: var(--v-snackbar-text-color-base);
+.v-toolbar__title h1 {
+  font-size: 1.25rem;
+  line-height: 1.5;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: normal;
+  padding: 0;
+  margin: 0;
+  margin-block-start: 0;
+  margin-block-end: 0;
+  margin-inline-start: 0;
+  margin-inline-end: 0;
+}
+.v-snack__content {
+  color: var(--v-snackbar-text-color-base);
+}
+
+.v-snack__wrapper {
+  min-width: auto !important;
+}
+
+.v-justify-text {
+  text-align: justify;
+}
+
+.main {
+  background-color: var(--v-background-base);
+}
+
+/* animate-css styles to not load the whole library */
+:root {
+  --animate-duration: 1s;
+  --animate-delay: 1s;
+  --animate-repeat: 1;
+}
+
+.animate__animated {
+  -webkit-animation-duration: 1s;
+  animation-duration: 1s;
+  -webkit-animation-duration: var(--animate-duration);
+  animation-duration: var(--animate-duration);
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+}
+
+/* Fading entrances  */
+@-webkit-keyframes fadeIn {
+  from {
+    opacity: 0;
   }
 
-  .v-snack__wrapper {
-    min-width: auto !important;
+  to {
+    opacity: 1;
+  }
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
   }
 
-  .main {
-    background-color: var(--v-background-base);
+  to {
+    opacity: 1;
   }
-
-  /* animate-css styles to not load the whole library */
-  :root {
-    --animate-duration: 1s;
-    --animate-delay: 1s;
-    --animate-repeat: 1;
-  }
-
-  .animate__animated {
-    -webkit-animation-duration: 1s;
-    animation-duration: 1s;
-    -webkit-animation-duration: var(--animate-duration);
-    animation-duration: var(--animate-duration);
-    -webkit-animation-fill-mode: both;
-    animation-fill-mode: both;
-  }
-
-  /* Fading entrances  */
-  @-webkit-keyframes fadeIn {
-    from {
-      opacity: 0;
-    }
-
-    to {
-      opacity: 1;
-    }
-  }
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-    }
-
-    to {
-      opacity: 1;
-    }
-  }
-  .animate__fadeIn {
-    -webkit-animation-name: fadeIn;
-    animation-name: fadeIn;
-  }
+}
+.animate__fadeIn {
+  -webkit-animation-name: fadeIn;
+  animation-name: fadeIn;
+}
 </style>
 
 <script>
@@ -171,29 +182,102 @@ import {
   askForPermissionToReceiveNotifications,
 } from './utils/push-notifications.js';
 
+function initializeOnlineStatus() {
+  window.addEventListener('offline', () => {
+    this.$store.commit('updateOnlineStatus', false);
+  });
+  window.addEventListener('online', () => {
+    this.$store.commit('updateOnlineStatus', true);
+  });
+}
+function initializeDarkMode() {
+  const storedDarkTheme = JSON.parse(localStorage.getItem('darkTheme'));
+  if (
+    window.matchMedia &&
+    window.matchMedia('(prefers-color-scheme: dark)').matches &&
+    storedDarkTheme === null
+  ) {
+    // Dark mode base on device settings
+    this.$vuetify.theme.dark = true;
+    window.matchMedia('(prefers-color-scheme: dark)').addListener((event) => {
+      if (event.matches) {
+        this.$vuetify.theme.dark = true;
+      } else {
+        this.$vuetify.theme.dark = false;
+      }
+    });
+  } else {
+    // Dark mode base on user selection
+    this.$vuetify.theme.dark =
+      storedDarkTheme === null ? false : storedDarkTheme;
+  }
+}
+function initializeUserStatus() {
+  firebase.auth().onAuthStateChanged((user) => {
+    if (user) {
+      this.$store.commit('updateUser', user);
+      this.$store.dispatch('getUserInfo');
+      this.$store.dispatch('getDutyDays');
+      this.$store.dispatch('syncNotifications');
+
+      document.addEventListener('visibilitychange', () => {
+        if (!document.hidden) {
+          this.$store.dispatch('syncNotifications');
+        }
+      });
+
+      if (getPermissionForNotification()) {
+        askForPermissionToReceiveNotifications().then((token) =>
+          this.$store.dispatch('updateNotificationToken', token || null)
+        );
+      }
+
+      messaging.onMessage((payload) => {
+        // Get notifications when app is opened
+        this.$store.dispatch('addNotification', {
+          ...payload.notification,
+          timestamp: payload.data.timestamp,
+        });
+      });
+
+      messaging.onTokenRefresh(() => {
+        askForPermissionToReceiveNotifications().then((token) =>
+          this.$store.dispatch('updateNotificationToken', token)
+        );
+      });
+
+      if (this.$router.currentRoute.name === 'Login') {
+        this.$router.push({ name: 'Dashboard' });
+      }
+    } else {
+      this.$store.commit('updateUser', null);
+      if (this.$router.currentRoute.name !== 'Login') {
+        this.$router.push({ name: 'Login' });
+      }
+    }
+  });
+}
+
 export default {
   name: 'App',
   data: () => ({
     applicationName: 'En Garde',
   }),
   computed: {
+    ...mapState(['user', 'snackbar', 'onlineStatus']),
+    ...mapGetters(['newNotifications']),
     pageTitle: function() {
-      return this.$route.name === 'Login' ? this.applicationName : this.$route.name;
+      return this.$route.name === 'Login'
+        ? this.applicationName
+        : this.$route.name;
     },
-    ...mapState([
-      'user', 'snackbar',
-    ]),
-    ...mapGetters([
-      'newNotifications',
-    ]),
   },
   watch: {
     $route: {
       handler: function(to) {
         document.title = `${this.applicationName} - ${to.name}`;
-        if(!['Login', 'About'].includes(to.name))
-          this.checkPermissions();
-        if(to.name === 'Login' && this.user) {
+        if (!['Login', 'About'].includes(to.name)) this.checkPermissions();
+        if (to.name === 'Login' && this.user) {
           this.$router.push({ name: 'Dashboard' });
         }
       },
@@ -201,58 +285,9 @@ export default {
     },
   },
   beforeCreate: function() {
-    const storedDarkTheme = JSON.parse(localStorage.getItem('darkTheme'));
-    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches && storedDarkTheme === null) { // Dark mode base on device settings
-      this.$vuetify.theme.dark = true;
-      window.matchMedia('(prefers-color-scheme: dark)').addListener(event => {
-        if(event.matches) {
-          this.$vuetify.theme.dark = true;
-        } else {
-          this.$vuetify.theme.dark = false;
-        }
-      });
-    } else { // Dark mode base on user selection
-      this.$vuetify.theme.dark = storedDarkTheme === null ? false : storedDarkTheme;
-    }
-
-    firebase.auth().onAuthStateChanged((user) => {
-      if(user) {
-        this.$store.commit('updateUser', user);
-        this.$store.dispatch('getUserInfo');
-        this.$store.dispatch('getDutyDays');
-        this.$store.dispatch('syncNotifications');
-
-        document.addEventListener('visibilitychange', () => {
-          if(!document.hidden) {
-            this.$store.dispatch('syncNotifications');
-          }
-        });
-        
-        if(getPermissionForNotification()) {
-          askForPermissionToReceiveNotifications()
-            .then(token => this.$store.dispatch('updateNotificationToken', token || null));
-        }
-        
-        messaging.onMessage((payload) => {
-          // Get notifications when app is opened
-          this.$store.dispatch('addNotification', { ...payload.notification, timestamp: payload.data.timestamp });
-        });
-
-        messaging.onTokenRefresh(() => {
-          askForPermissionToReceiveNotifications()
-            .then(token => this.$store.dispatch('updateNotificationToken', token));
-        });
-
-        if(this.$router.currentRoute.name === 'Login') {
-          this.$router.push({ name: 'Dashboard' });
-        }
-      } else {
-        this.$store.commit('updateUser', null);
-        if(this.$router.currentRoute.name !== 'Login') {
-          this.$router.push({ name: 'Login' });
-        }
-      }
-    });
+    initializeOnlineStatus.call(this);
+    initializeDarkMode.call(this);
+    initializeUserStatus.call(this);
   },
   methods: {
     showBackButton() {
@@ -266,22 +301,22 @@ export default {
       localStorage.setItem('darkTheme', this.$vuetify.theme.dark);
     },
     goToAboutPage() {
-      if(this.$router.currentRoute.name !== 'About') {
+      if (this.$router.currentRoute.name !== 'About') {
         this.$router.push({ name: 'About' });
       }
     },
     goToProfilePage() {
-      if(this.$router.currentRoute.name !== 'Profile') {
+      if (this.$router.currentRoute.name !== 'Profile') {
         this.$router.push({ name: 'Profile' });
       }
     },
     goToNotificationsPage() {
-      if(this.$router.currentRoute.name !== 'Notifications') {
+      if (this.$router.currentRoute.name !== 'Notifications') {
         this.$router.push({ name: 'Notifications' });
       }
     },
     checkPermissions() {
-      if(this.user === null) {
+      if (this.user === null) {
         this.$router.push({ name: 'Login' });
       }
     },
@@ -295,6 +330,6 @@ export default {
       this.$store.commit('clearStore');
       window.localStorage.clear();
     },
-  }
+  },
 };
 </script>
