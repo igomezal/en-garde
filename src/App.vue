@@ -55,6 +55,7 @@
     </v-app-bar>
 
     <v-snackbar
+      v-if="user"
       color="snackbar-background-color"
       v-model="snackbar.status"
       elevation="24"
@@ -74,7 +75,7 @@
 
     <v-main class="main">
       <v-alert
-        v-if="!onlineStatus"
+        v-if="user && !onlineStatus"
         type="info"
         icon="mdi-cloud-alert"
         outlined
