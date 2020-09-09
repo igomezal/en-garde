@@ -40,7 +40,7 @@ export default new Vuex.Store({
     dutyDays: {},
     loadingUserData: true,
     notifications: [],
-    onlineStatus: true,
+    onlineStatus: window.navigator.onLine,
   },
   getters: {
     newNotifications: (state) =>
@@ -62,6 +62,7 @@ export default new Vuex.Store({
         dutyDays: {},
         loadingUserData: true,
         notifications: [],
+        onlineStatus: window.navigator.onLine,
       };
       return state;
     },
