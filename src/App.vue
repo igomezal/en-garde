@@ -276,7 +276,7 @@ export default {
   watch: {
     $route: {
       handler: function(to) {
-        document.title = `${this.applicationName} - ${to.name}`;
+        document.title = `${this.applicationName} ${to.name? `- ${to.name}` : ''}`;
         if (!['Login', 'About'].includes(to.name)) this.checkPermissions();
         if (to.name === 'Login' && this.user) {
           this.$router.push({ name: 'Dashboard' });
