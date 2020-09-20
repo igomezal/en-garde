@@ -6,7 +6,7 @@
           <ProfileField icon="mdi-account" altText="Name" :info="user.displayName" />
           <ProfileField icon="mdi-email" altText="Email" :info="user.email" />
         </ul>
-        <v-form>
+        <v-form @submit="submit">
           <v-text-field
             :rules="[rules.required, rules.validNumber]"
             id="telephone"
@@ -19,7 +19,7 @@
           ></v-text-field>
           <div class="d-flex justify-end">
             <v-btn class="mr-4" outlined @click="cancel">Cancel</v-btn>
-            <v-btn :class="{ 'black--text': dark }" color="primary" @click="submit">Submit</v-btn>
+            <v-btn :class="{ 'black--text': dark }" color="primary" type="submit">Submit</v-btn>
           </div>
         </v-form>
       </v-col>
@@ -31,35 +31,35 @@
 </style>
 
 <style scoped>
-  .v-application ul {
-    padding-left: 0;
-    list-style-type: none;
-    margin-bottom: 20px;
-  }
+.v-application ul {
+  padding-left: 0;
+  list-style-type: none;
+  margin-bottom: 20px;
+}
 </style>
 
 <script>
-import intlTelInput from "intl-tel-input/build/js/intlTelInput.js";
-import utilsScript from "intl-tel-input/build/js/utils.js";
+import intlTelInput from 'intl-tel-input/build/js/intlTelInput.js';
+import utilsScript from 'intl-tel-input/build/js/utils.js';
 import { mapState } from 'vuex';
-import ProfileField from "@/components/ProfileField.vue";
+import ProfileField from '@/components/ProfileField.vue';
 
 let telephoneInput = undefined;
 
 export default {
-  name: "ProfilePage",
+  name: 'ProfilePage',
   data: () => ({
     telephoneInput: undefined,
     rules: {
-      required: (value) => !!value || "Required.",
+      required: (value) => !!value || 'Required.',
       validNumber: () =>
         (telephoneInput && telephoneInput.isValidNumber()) ||
-        "Provide a valid telephone number.",
+        'Provide a valid telephone number.',
     },
   }),
   mounted: function () {
-    const input = document.querySelector("#telephone");
-    if (document.querySelector("#telephone") !== null && !telephoneInput) {
+    const input = document.querySelector('#telephone');
+    if (document.querySelector('#telephone') !== null && !telephoneInput) {
       telephoneInput = intlTelInput(input, {
         utilsScript,
       });
@@ -67,7 +67,7 @@ export default {
   },
   updated: function () {
     if (!telephoneInput) {
-      const input = document.querySelector("#telephone");
+      const input = document.querySelector('#telephone');
       telephoneInput = intlTelInput(input, {
         utilsScript,
       });
@@ -84,8 +84,7 @@ export default {
     telephone: {
       get() {
         const { telephone } = this.$store.getters;
-        if (telephoneInput && telephone)
-          telephoneInput.setNumber(telephone);
+        if (telephoneInput && telephone) telephoneInput.setNumber(telephone);
         return telephone;
       },
       set() {},
@@ -93,23 +92,22 @@ export default {
     dark() {
       return this.$vuetify.theme.dark;
     },
-    ...mapState([
-      'user',
-    ]),
+    ...mapState(['user']),
   },
   methods: {
-    submit() {
+    submit(event) {
+      event.preventDefault();
       if (telephoneInput.isValidNumber()) {
         if (this.telephone !== telephoneInput.getNumber())
           this.$store.dispatch(
-            "updateTelephoneNumber",
+            'updateTelephoneNumber',
             telephoneInput.getNumber()
           );
-        this.$router.push({ name: "Dashboard" });
+        this.$router.push({ name: 'Dashboard' });
       }
     },
     cancel() {
-      this.$router.push({ name: "Dashboard" });
+      this.$router.push({ name: 'Dashboard' });
     },
   },
 };
